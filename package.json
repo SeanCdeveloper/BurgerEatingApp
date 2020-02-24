@@ -1,0 +1,24 @@
+{
+  "name": "burgereatingapp",
+  "version": "1.0.0",
+  "description": "BurgerApp",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SeanCdeveloper/BurgerEatingApp.git"
+  },
+  "author": "Sean Cumming",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SeanCdeveloper/BurgerEatingApp/issues"
+  },
+  "homepage": "https://github.com/SeanCdeveloper/BurgerEatingApp#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "express-handlebars": "^3.1.0",
+    "mysql": "^2.18.1"
+  }
+}

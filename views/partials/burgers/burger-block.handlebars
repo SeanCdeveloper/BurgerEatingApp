@@ -1,0 +1,10 @@
+<li>
+	{{name}}
+<!--mod needed: "change-sleep"-->
+	<button class="change-sleep" data-id="{{this.id}}" data-newsleep="{{sleep}}">
+		{{#if sleep}}SLEEP TIME!{{else}}WAKE UP!{{/if}}
+	</button>
+    <!--mod needed: "class=delete-cat"-->
+	<button data-id="{{this.id}}" class="delete-cat">Delete This</button>
+</li>
+
