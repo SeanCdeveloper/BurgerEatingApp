@@ -13,9 +13,9 @@ CREATE TABLE cats
 );
 ———————————————————————————————————————
 
-“name”: the name of the second column.  
+“name”: the name of the second column of the “cats” table.   
 
-“sleepy”: the name of the third column that has a value of “BOOLEAN DEFAULT FALSE”.
+“sleepy”: the name of the third column of the “cats” table, which has a value of “BOOLEAN DEFAULT FALSE”.
 
 VIEW LAYER
 
@@ -93,7 +93,7 @@ data-newsleep = “{{sleep}}”:  References a data-attribute that sends the dyn
 
 The “click” Event is handled by the cats.js File, below:
 
-cat.js: Main external .js file (hbRef/01-catsApp/public/assets/js)
+(cats.js: Main external .js file (hbRef/01-catsApp/public/assets/js)
 ———————————————————————————————————————
     $(".change-sleep").on("click", function(event) {
       //console.log("add button clicked");
@@ -121,9 +121,10 @@ cat.js: Main external .js file (hbRef/01-catsApp/public/assets/js)
 
 $(“.change-sleep”):  This is calling the dynamic button created in cat-block.handlebars, which has it functionality described above.  
 
-var id = $(this).data(“id”):  This statement sets up the functionality allowing each <button> to return an original, auto-incrementing id after its Event has been triggered.  (Note: console.log(“button clicked “ + id) will display that a button has been clicked and relay its id to the console, i.e, if the first button is clicked, its console display is “button clicked 1”).  
+var id = $(this).data(“id”):  This statement sets up the functionality allowing each <button> to return an original, auto-incrementing id after its Event has been triggered.  (Note: console.log(“button clicked “ + id) will display that a button has been clicked and relay its id to the console.  For example, if the first button is clicked, its console display is “button clicked 1”).  
 
 var newSleep = $(this).data(“newsleep”):  This statement uses the data() method to relay the data.newsleep data-attribute from the cat-block.handlebars File.  The value of data-newsleep is “{{sleep}}”; therefore, this data transmission triggers the toggling of the dynamic .change-sleep <button> from “Sleep Time!” to “Wake Up!”.  Its eventual value is “{{sleep}}” which toggles the buttons because of the handlebar-if statement inside the <button> Element’s creation.  
+
 var newSleepState = {sleepy: newSleep}; :  A newSleepState Object is initialized.  Its property is sleepy, referring to sleepy, which is referring to the “sleepy” Column/handlebar reference inside the code.  Its value is newSleep, which was initialized in its preceding statement and sent equal to the “data-newsleep=‘{{sleep}}” handlebar reference.  
 
 PUT Request
@@ -132,7 +133,7 @@ AJAX Call Nested Inside onClick Event(PUT Request):
 
 This AJAX Call is a PUT request, modifying the “api/cats/ + id” route.  
 
-data: newSleepState:  This statement sends the newSleepState Object initialized in the preceding statement into the AJAX call, which sends the message to the ___ to modify the dynamic buttons.  
+data: newSleepState:  This statement sends the newSleepState Object initialized in the preceding statement into the AJAX call, which sends the message to the rest of the code to modify the dynamic buttons.  
 
 location.reload():  re-loads the current URL, similar to refresh button.  
 
@@ -155,6 +156,9 @@ var cat = require(“../models/cat.js):  (database functions are contained in mo
 router.put Object Inside catsController.js
 
 router.put() Function + cat.update Object + Method:
+
+
+(catsController.js)
 ———————————————————————————————————————
 router.put("/api/cats/:id", function(req, res) {
   var condition = "id = " + req.params.id;
@@ -174,7 +178,7 @@ router.put("/api/cats/:id", function(req, res) {
 });
 ———————————————————————————————————————
 
-var condition = “id = “ + req.params.id:  A condition variable is initialized with the value of the id of the button that was clicked through the "req.params.id" object, which relates the selected id of the requested Object, which is the button that was clicked.  The console.log statement below this line verifies that the correct button was triggered, allowing the user to know that the correct button is attached to an id and the AJAX call is transferring its “PUT” Request to the CONTROLLER VIEW.
+var condition = “id = ” + req.params.id;:  A condition variable is initialized with the value of the id of the button that was clicked through the "req.params.id" object, which relates the selected id of the requested Object, which is the button that was clicked.  The console.log statement below this line verifies that the correct button was triggered, allowing the user to know that the correct button is attached to an id and the AJAX call is transferring its “PUT” Request to the CONTROLLER VIEW.
 
 {sleepy: req.body.sleepy}:  (1st Parameter of cat.update() Object)  The sleepy Property is being passed to the cat.update() Object/Function with a value of “req.body.sleepy”.  The sleepy property of the request body is introduced through the cat-block.handlebars Code, and, inside this PUT request, it provides the starting functionality for toggling the buttons.  
 
@@ -182,6 +186,7 @@ condition:  (2nd Parameter of cat.update() Object):  Above the 2nd parameter’s
 
 CONFIG VIEW/orm.js
 
+(orm.js)
 ———————————————————————————————————————
 var orm = {
   // An example of objColVals would be {name: panther, sleepy: true}
@@ -204,3 +209,67 @@ var orm = {
   }, 
 ———————————————————————————————————————
 
+This block of code updates the mySQL table after the AJAX call is received and the router in the controller has passed the data onward. 
+
+condition Parameter:  (3rd Parameter of “update: function()”:  The “condition” Parameter’s value was set inside the CONTROLLER VIEW, inside the router.put({}) statement.  It is equal to the “req.params.id", otherwise known as the id of the selected <button> Element.   Writing the condition variable in the put method in the orm.js file like this allows for dynamic changes based on varying the condition variable.  (You want to be able to update anything, so use the condition variable to ensure this functionality). 
+
+(table, objColVals, cb):  These are all defined in the MODEL VIEW, specifically the .orm File. 
+
+connection.query() Statement:  You pass the queryString made into the program.  If you get an error, the validation part executes; otherwise, you pass the result to the callback function that was created in the parameters of the update Object Methods’s initialization: “result(cb);”
+
+MODEL VIEW
+
+The “models/cat.js” File then provides the database function for executing the put request.
+
+The .update() Functionality used in the cat.update({…}) statement is attached to the “models/cat.js” File.
+
+(models/cat.js)
+———————————————————————————————————————
+var orm = require(“../config/orm.js");
+
+var cat = {
+update: function(objColVals, condition, cb) {
+    orm.update("cats", objColVals, condition, function(res) {
+      cb(res);
+    });
+  },
+}
+———————————————————————————————————————
+
+The functionality for allowing the orm Object in the CONTROLLER VIEW to perform its function is inside the MODEL VIEW, specifically models/cat.js.  
+
+The update Object-Method defined here allows the orm Object to update the mySQL page with the “update: function(objColVals, condition, cb)” values.  
+
+orm.update(“cats”, objColVals, condition, function(res){cb(res)}:  “cats” defines the database table to use, and the other parameters are defined in and passed from the orm.js File. 
+
+cb Parameter + cb(res) statement:  These allow for the response to be monitored for using the correct response.  The callback function’s value is expressed as an anonymous function, and whatever callback function was returned in the orm.js callback’s function will get passed to the cb(result) of the model-view callback result.  
+
+The CONTROLLER VIEW, catsController.js, called the MODEL VIEW, “cat.js”, and, in the router.update() statement, you should have a cat.update() statement.
+
+Returning the CONTROLLER VIEW To The VIEWS VIEW
+
+(cats Controller.js)
+———————————————————————————————————————
+router.put("/api/cats/:id", function(req, res) {
+  var condition = "id = " + req.params.id;
+
+  console.log("condition", condition);
+
+  cat.update({
+    sleepy: req.body.sleepy
+  }, condition, function(result) {
+    if (result.changedRows == 0) {
+      // If no rows were changed, then the ID must not exist, so 404
+      return res.status(404).end();
+    } else {
+      res.status(200).end();
+    }
+  });
+});
+———————————————————————————————————————
+
+=====================================================================
+The model calls the orm.
+
+The controller calls the model.  
+=====================================================================
