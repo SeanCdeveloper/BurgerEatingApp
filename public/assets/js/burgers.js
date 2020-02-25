@@ -26,7 +26,7 @@ $(function () {
         console.log("button clicked " + id);
 
         var newSleepState = {
-            sleepy: newSleep
+            devour: newSleep
         };
 
         // Send the PUT request.
@@ -50,7 +50,7 @@ $(function () {
             name: $("#ca").val().trim(),
             // [name=sleepy] was changed to devour in "[name = devour]" from "[name=sleepy]"
             // modify sleepy Object later. 
-            sleepy: $("[name=devour]:checked").val().trim()
+            devour: $("[name=devour]:checked").val().trim()
         };
 
         // Send the POST request.

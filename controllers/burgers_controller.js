@@ -15,11 +15,11 @@ router.get("/", function(req, res) {
   
   router.post("/api/burgers", function(req, res) {
     burger.create([
-        /* mod needed */
-      "name", "sleepy"
+        /* mod needed was name: "sleepy"*/
+      "name", "devour"
     ], [
-       /* mod needed */ 
-      req.body.name, req.body.sleepy
+       /* mod needed: was req.body.sleepy */ 
+      req.body.name, req.body.devour
     ], function(result) {
       res.json({ id: result.insertId });
     });
@@ -31,8 +31,8 @@ router.get("/", function(req, res) {
     console.log("condition", condition);
   
     burger.update({
-        /* mod needed */
-      sleepy: req.body.sleepy
+        /* mod needed was req.body.sleepy */
+      devour: req.body.devour
     }, condition, function(result) {
       if (result.changedRows == 0) {
         return res.status(404).end();
