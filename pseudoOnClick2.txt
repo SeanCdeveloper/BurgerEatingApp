@@ -1,0 +1,206 @@
+Tracing the onClick Event Changing Cats From “sleepy” Row to “wake” Row.  
+
+Cat Table (db View)
+
+(schema.db)
+———————————————————————————————————————
+CREATE TABLE cats
+(
+	id int NOT NULL AUTO_INCREMENT,
+	name varchar(255) NOT NULL,
+	sleepy BOOLEAN DEFAULT false,
+	PRIMARY KEY (id)
+);
+———————————————————————————————————————
+
+“name”: the name of the second column.  
+
+“sleepy”: the name of the third column that has a value of “BOOLEAN DEFAULT FALSE”.
+
+VIEW LAYER
+
+(index.handlebars)
+———————————————————————————————————————
+<h1>Cats!</h1>
+
+<h2>Cats that are not sleepy!</h2>
+
+<ul>
+  {{#each cats}}
+    {{#unless sleepy}}
+      {{> cats/cat-block sleep=true}}
+    {{/unless}}
+  {{/each}}
+</ul>
+
+<h2>Cats that are sleepy!</h2>
+
+<ul>
+  {{#each cats}}
+    {{#if sleepy}}
+      {{> cats/cat-block sleep=false}}
+    {{/if}}
+  {{/each}}
+</ul>
+
+<h2>Add a Cat</h2>
+<form class="create-form">
+
+  <div class="form-group">
+    <label for="ca">Cat Name:</label>
+    <input type="text" id="ca" name="name">
+  </div>
+
+  <div class="form-group">
+    <label for="slee">Sleepy?</label><br>
+    <input type="radio" name="sleepy" value="1" checked> Sleepy!<br>
+    <input type="radio" name="sleepy" value="0"> Awake
+  </div>
+
+  <button type="submit">Add Cat</button>
+</form>
+———————————————————————————————————————
+
+  {{#each cats}} :   Refers to the cats table.  This line of code makes is so that the <ul> element displays each of the cats inside the table inside the <ul> Element.  
+
+ {{#unless sleepy}} + {{#if sleepy}}:  “sleepy” Boolean value inside the cats table.  
+
+The <ul> blocks use reverse logic, but, remember, the default of the “sleepy” Column is false.
+
+ {{> cats/cat-block sleep=true}} + {{> cats/cat-block sleep=false}}:   The “sleep” attribute is first introduced in the “{{> cats/cat-block sleep=true}}” statement but is referencing the “cat-block.handlebars” File as seen below.  
+
+The syntax {{> cats/cats-block}} is for partials, for example, to include another template. 
+
+Note the working directory of the “cat-block.handlebars” File: “(views/partials/cats/cat-block.handlebars)”
+
+(views/partials/cats/cat-block.handlebars)
+———————————————————————————————————————
+<li>
+    {{name}}
+
+    <button class="change-sleep" data-id="{{this.id}}" data-newsleep="{{sleep}}">
+        {{#if sleep}}SLEEP TIME!{{else}}WAKE UP!{{/if}}
+    </button>
+    <button data-id="{{this.id}}" class="delete-cat">Delete This</button>
+</li>
+———————————————————————————————————————
+
+data-id="{{this.id}}":  Assigns a unique numeric id to each of the dynamic buttons after a click Event is triggered.  The first button on the screen will be #1 and auto-increments from there.  
+
+data-newsleep = “{{sleep}}”:  References a data-attribute that sends the dynamic value of “sleep”, further translating to “sleep=true” and “sleep=false” to the button objects, filling the values of the two previously stated values ({{> cats/cat-block sleep=true}} + {{> cats/cat-block sleep=false}}).  
+
+ {{#if sleep}}SLEEP TIME!{{else}}WAKE UP!{{/if}}:  This dynamic handlebar-if statement creates a dynamic toggle between “SleepTime!” and “Wake UP!” Buttons, dependent on a click Event being triggered on either button.  
+
+The “click” Event is handled by the cats.js File, below:
+
+cat.js: Main external .js file (hbRef/01-catsApp/public/assets/js)
+———————————————————————————————————————
+    $(".change-sleep").on("click", function(event) {
+      //console.log("add button clicked");
+      var id = $(this).data("id");
+      var newSleep = $(this).data("newsleep");
+      console.log("button clicked " + id);
+  
+      var newSleepState = {
+        sleepy: newSleep
+      };
+  
+      // Send the PUT request.
+      $.ajax("/api/cats/" + id, {
+        type: "PUT", 
+        data: newSleepState
+      }).then(
+        function() {
+          console.log("changed sleep to", newSleep);
+          // Reload the page to get the updated list
+          location.reload();
+        }
+      );
+    });
+———————————————————————————————————————
+
+$(“.change-sleep”):  This is calling the dynamic button created in cat-block.handlebars, which has it functionality described above.  
+
+var id = $(this).data(“id”):  This statement sets up the functionality allowing each <button> to return an original, auto-incrementing id after its Event has been triggered.  (Note: console.log(“button clicked “ + id) will display that a button has been clicked and relay its id to the console, i.e, if the first button is clicked, its console display is “button clicked 1”).  
+
+var newSleep = $(this).data(“newsleep”):  This statement uses the data() method to relay the data.newsleep data-attribute from the cat-block.handlebars File.  The value of data-newsleep is “{{sleep}}”; therefore, this data transmission triggers the toggling of the dynamic .change-sleep <button> from “Sleep Time!” to “Wake Up!”.  Its eventual value is “{{sleep}}” which toggles the buttons because of the handlebar-if statement inside the <button> Element’s creation.  
+var newSleepState = {sleepy: newSleep}; :  A newSleepState Object is initialized.  Its property is sleepy, referring to sleepy, which is referring to the “sleepy” Column/handlebar reference inside the code.  Its value is newSleep, which was initialized in its preceding statement and sent equal to the “data-newsleep=‘{{sleep}}” handlebar reference.  
+
+PUT Request
+
+AJAX Call Nested Inside onClick Event(PUT Request):
+
+This AJAX Call is a PUT request, modifying the “api/cats/ + id” route.  
+
+data: newSleepState:  This statement sends the newSleepState Object initialized in the preceding statement into the AJAX call, which sends the message to the ___ to modify the dynamic buttons.  
+
+location.reload():  re-loads the current URL, similar to refresh button.  
+
+CONTROLLER VIEW
+
+After the Click Event occurs, the ensuing AJAX Call is sent to the Controller View: “catsController.js”.  
+
+(catsController.js)
+———————————————————————————————————————
+var express = require("express");
+
+var router = express.Router();
+
+// Import the model (cat.js) to use its database functions.
+var cat = require("../models/cat.js");
+———————————————————————————————————————
+
+var cat = require(“../models/cat.js):  (database functions are contained in models/cat.js) We require the cat.js File so that we can then utilize the cat Object, which is initialized inside the models/cat.js File, with its attached database functions.  
+
+router.put Object Inside catsController.js
+
+router.put() Function + cat.update Object + Method:
+———————————————————————————————————————
+router.put("/api/cats/:id", function(req, res) {
+  var condition = "id = " + req.params.id;
+
+  console.log("condition", condition);
+
+  cat.update({
+    sleepy: req.body.sleepy
+  }, condition, function(result) {
+    if (result.changedRows == 0) {
+      // If no rows were changed, then the ID must not exist, so 404
+      return res.status(404).end();
+    } else {
+      res.status(200).end();
+    }
+  });
+});
+———————————————————————————————————————
+
+var condition = “id = “ + req.params.id:  A condition variable is initialized with the value of the id of the button that was clicked through the "req.params.id" object, which relates the selected id of the requested Object, which is the button that was clicked.  The console.log statement below this line verifies that the correct button was triggered, allowing the user to know that the correct button is attached to an id and the AJAX call is transferring its “PUT” Request to the CONTROLLER VIEW.
+
+{sleepy: req.body.sleepy}:  (1st Parameter of cat.update() Object)  The sleepy Property is being passed to the cat.update() Object/Function with a value of “req.body.sleepy”.  The sleepy property of the request body is introduced through the cat-block.handlebars Code, and, inside this PUT request, it provides the starting functionality for toggling the buttons.  
+
+condition:  (2nd Parameter of cat.update() Object):  Above the 2nd parameter’s usage of condition, var condition is initialized with the value of “id = “ + req.params.id.  Thus, this line of code sends the id of the dynamically selected button as the value of condition variable.   
+
+CONFIG VIEW/orm.js
+
+———————————————————————————————————————
+var orm = {
+  // An example of objColVals would be {name: panther, sleepy: true}
+  update: function(table, objColVals, condition, cb) {
+    var queryString = "UPDATE " + table;
+
+    queryString += " SET ";
+    queryString += objToSql(objColVals);
+    queryString += " WHERE ";
+    queryString += condition;
+
+    console.log(queryString);
+    connection.query(queryString, function(err, result) {
+      if (err) {
+        throw err;
+      }
+
+      cb(result);
+    });
+  }, 
+———————————————————————————————————————
+
