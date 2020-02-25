@@ -1,0 +1,92 @@
+Tracing the onClick Event Changing Cats From “sleepy” Row to “wake” Row.  
+
+Cat Table (db View)
+
+(schema.db)
+———————————————————————————————————————
+CREATE TABLE cats
+(
+	id int NOT NULL AUTO_INCREMENT,
+	name varchar(255) NOT NULL,
+	sleepy BOOLEAN DEFAULT false,
+	PRIMARY KEY (id)
+);
+———————————————————————————————————————
+
+“name”: the name of the second column.  
+
+“sleepy”: the name of the third column that has a value of “BOOLEAN DEFAULT FALSE”.
+
+View Layer
+
+(index.handlebars)
+———————————————————————————————————————
+<h1>Cats!</h1>
+
+<h2>Cats that are not sleepy!</h2>
+
+<ul>
+  {{#each cats}}
+    {{#unless sleepy}}
+      {{> cats/cat-block sleep=true}}
+    {{/unless}}
+  {{/each}}
+</ul>
+
+<h2>Cats that are sleepy!</h2>
+
+<ul>
+  {{#each cats}}
+    {{#if sleepy}}
+      {{> cats/cat-block sleep=false}}
+    {{/if}}
+  {{/each}}
+</ul>
+
+<h2>Add a Cat</h2>
+<form class="create-form">
+
+  <div class="form-group">
+    <label for="ca">Cat Name:</label>
+    <input type="text" id="ca" name="name">
+  </div>
+
+  <div class="form-group">
+    <label for="slee">Sleepy?</label><br>
+    <input type="radio" name="sleepy" value="1" checked> Sleepy!<br>
+    <input type="radio" name="sleepy" value="0"> Awake
+  </div>
+
+  <button type="submit">Add Cat</button>
+</form>
+———————————————————————————————————————
+
+{{#each cats}} :   Refers to the cats table.  This line of code makes is so that the <ul> element displays each of the cats inside the table inside the <ul> Element.  
+
+{{#unless sleepy}} + {{#if sleepy}}:  “sleepy” Boolean value inside the cats table.  
+
+The <ul> blocks use reverse logic, but, remember, the default of the “sleepy” Column is false.
+
+{{> cats/cat-block sleep=true}} + {{> cats/cat-block sleep=false}}:   The “sleep” attribute is first introduced in the “{{> cats/cat-block sleep=true}}” statement but is referencing the “cat-block.handlebars” File as seen below.  
+
+The syntax {{> cats/cats-block}} is for partials, for example, to include another template. 
+
+Note the working directory of the “cat-block.handlebars” File: “(views/partials/cats/cat-block.handlebars)”
+
+(views/partials/cats/cat-block.handlebars)
+———————————————————————————————————————
+<li>
+    {{name}}
+
+    <button class="change-sleep" data-id="{{this.id}}" data-newsleep="{{sleep}}">
+        {{#if sleep}}SLEEP TIME!{{else}}WAKE UP!{{/if}}
+    </button>
+    <button data-id="{{this.id}}" class="delete-cat">Delete This</button>
+</li>
+———————————————————————————————————————
+
+data-id="{{this.id}}":  Assigns a unique numeric id to each of the dynamic buttons after a click Event is triggered.  The first button on the screen will be #1 and auto-increments from there.  
+
+data-newsleep = “{{sleep}}”:  References a data-attribute that sends the dynamic value of “sleep”, further translating to “sleep=true” and “sleep=false” to the button objects, filling the values of the two previously stated values ({{> cats/cat-block sleep=true}} + {{> cats/cat-block sleep=false}}).  
+
+{{#if sleep}}SLEEP TIME!{{else}}WAKE UP!{{/if}}:  This dynamic handlebar-if statement creates a dynamic toggle between “SleepTime!” and “Wake UP!” Buttons, dependent on a click Event being triggered on either button.
