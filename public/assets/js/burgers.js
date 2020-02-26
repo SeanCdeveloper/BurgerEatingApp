@@ -47,7 +47,7 @@ $(function () {
         event.preventDefault();
 
         var newCat = {
-            name: $("#ca").val().trim(),
+            burger_name: $("#ca").val().trim(),
             // [name=sleepy] was changed to devour in "[name = devour]" from "[name=sleepy]"
             // modify sleepy Object later. 
             devour: $("[name=devour]:checked").val().trim()

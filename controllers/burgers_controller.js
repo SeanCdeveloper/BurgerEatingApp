@@ -15,11 +15,11 @@ router.get("/", function(req, res) {
   
   router.post("/api/burgers", function(req, res) {
     burger.create([
-        /* mod needed was name: "sleepy"*/
-      "name", "devour"
+        /* mod needed was name: "name", "sleepy"*/
+      "burger_name", "devour"
     ], [
-       /* mod needed: was req.body.sleepy */ 
-      req.body.name, req.body.devour
+       /* mod needed: was "req.body.name" + "req.body.sleepy" */ 
+      req.body.burger_name, req.body.devour
     ], function(result) {
       res.json({ id: result.insertId });
     });
