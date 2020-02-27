@@ -2,7 +2,41 @@ body {
     background: #FED37F;
 }
 
-#picBurger {
+#imgWrap {
     text-align: center;   
 }
 
+h1 {
+    text-align: center;
+}
+
+.create-form {
+    text-align: center;
+}
+
+textarea {
+    height: 5em;
+    width: 30em;
+}
+
+#submitBtn {
+    background: #3D7DB4;
+    color: #ffffff;
+    font-size: 100%;
+    cursor: pointer;
+    letter-spacing: 0.21px;
+    border-radius: 8px;
+    padding: 4px 10px;
+    margin-top: 1%;
+    transition-duration: 0.15s;
+    transition-property: background-color;
+    transition-timing-function: linear;
+}
+
+#submitBtn:hover {
+    background: #366596;
+}
+
+#formDir {
+    color: #366596;
+}
