@@ -16,7 +16,8 @@ h1 {
 
 textarea {
     height: 5em;
-    width: 30em;
+    width: 20em;
+    background-color: white !important;
 }
 
 #submitBtn {
@@ -40,3 +41,12 @@ textarea {
 #formDir {
     color: #366596;
 }
+
+span {
+    background: #F6F6F8;
+}
+
+.change-sleep:focus {
+    background: #366596 !important;
+}
+

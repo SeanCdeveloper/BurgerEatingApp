@@ -1,10 +1,22 @@
 <li>
-	{{this.id}}.&nbsp; {{burger_name}}
-<!--mod needed: "change-sleep"-->
+  {{this.id}}.&nbsp; {{burger_name}}
+
 	<button class="change-sleep" data-id="{{this.id}}" data-newsleep="{{sleep}}">
 		{{#if sleep}}Devour Burger!{{else}}Re-Order!{{/if}}
 	</button>
-    <!--mod needed: "class=delete-cat"-->
 	<button data-id="{{this.id}}" class="delete-cat">Delete This</button>
 </li>
 
+
+<!--
+<li>
+  {{this.id}}.&nbsp; {{burger_name}}
+
+{{#if sleep}}
+	<button class="change-sleep" data-id="{{this.id}}" data-newsleep="{{sleep}}">
+		Devour Burger!
+	</button>
+{{/if}}
+	<button data-id="{{this.id}}" class="delete-cat">Delete This</button>
+</li>
+-->
