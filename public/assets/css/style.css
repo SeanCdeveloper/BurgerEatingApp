@@ -18,7 +18,8 @@ textarea {
     height: 5em;
     width: 20em;
     background-color: white !important;
-    font-size: 16pt;
+    font-size: 20pt;
+    text-align: center;
 }
 
 #submitBtn {
@@ -51,3 +52,15 @@ span {
     background: #366596 !important;
 }
 
+.col {
+  margin-left: 7em;
+}
+
+h3 {
+    text-decoration: underline;
+    font-family: fantasy;
+}
+
+h1 {
+    font-family: menlo;
+}
