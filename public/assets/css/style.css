@@ -64,3 +64,20 @@ h3 {
 h1 {
     font-family: menlo;
 }
+
+.devour-burger, .delete-item {
+    background: #3D7DB4; 
+    color: white; 
+    font-size: 100%;
+    cursor: pointer;
+    letter-spacing: 0.21px;
+    padding: 4px 10px;
+    margin-top: 1%;
+    transition-duration: 0.15s;
+    transition-property: background-color;
+    transition-timing-function: linear; 
+}
+
+.devour-burger:hover, .delete-item:hover {
+    background: #366596;
+}
