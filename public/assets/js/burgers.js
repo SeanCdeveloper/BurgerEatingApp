@@ -1,6 +1,6 @@
 $(function () {
 
-    $(".delete-cat").on("click", function () {
+    $(".delete-item").on("click", function () {
         event.preventDefault;
         const id = $(this).data("id");
         console.log("button clicked " + id);
@@ -15,7 +15,7 @@ $(function () {
         );
     });
 
-    $(".change-sleep").on("click", function (event) {
+    $(".devour-burger").on("click", function (event) {
         var id = $(this).data("id");
         var newSleep = $(this).data("newsleep");
         console.log("button clicked " + id);
