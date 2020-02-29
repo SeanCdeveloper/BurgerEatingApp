@@ -47,7 +47,7 @@ span {
     background: #F6F6F8;
 }
 
-.devour-burger:focus {
+.devour-burger:focus, .delete-item:focus  {
     background: #366596 !important;
 }
 
