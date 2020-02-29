@@ -81,3 +81,8 @@ h1 {
 .devour-burger:hover, .delete-item:hover {
     background: #366596;
 }
+
+#burger_name {
+    font-size: 16pt;
+}
+
